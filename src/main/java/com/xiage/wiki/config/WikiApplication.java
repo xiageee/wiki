@@ -1,12 +1,14 @@
-package com.xiage.wiki;
+package com.xiage.wiki.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
-
+//@ComponentScan({"com.xiage","com.test"}) /** 支持扫描多个包 */
 @SpringBootApplication
+@ComponentScan("com.xiage")
 public class WikiApplication {
 
     private static final Logger LOG = LoggerFactory.getLogger(WikiApplication.class);
