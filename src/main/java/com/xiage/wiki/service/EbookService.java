@@ -7,6 +7,7 @@ import com.xiage.wiki.req.EbookReq;
 import com.xiage.wiki.resp.EbookResp;
 import com.xiage.wiki.util.CopyUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -21,7 +22,9 @@ public class EbookService {
         /** 相当于创建where条件 */
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
-        criteria.andNameLike("%" + req.getName() + "%");
+        if(!ObjectUtils.isEmpty(req.getName())){
+            criteria.andNameLike("%" + req.getName() + "%");
+        }
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
 
         /** 遍历ebookList,将结果转成List<EbookResp> */
