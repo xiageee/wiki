@@ -5,8 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.xiage.wiki.domain.Ebook;
 import com.xiage.wiki.domain.EbookExample;
 import com.xiage.wiki.mapper.EbookMapper;
-import com.xiage.wiki.req.EbookReq;
-import com.xiage.wiki.resp.EbookResp;
+import com.xiage.wiki.req.EbookQueryReq;
+import com.xiage.wiki.req.EbookSaveReq;
+import com.xiage.wiki.resp.EbookQueryResp;
 import com.xiage.wiki.resp.PageResp;
 import com.xiage.wiki.util.CopyUtil;
 import org.slf4j.Logger;
@@ -25,19 +26,19 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public PageResp<EbookResp> list(EbookReq req){
+    public PageResp<EbookQueryResp> list(EbookQueryReq req) {
         /** 相当于创建where条件 */
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
-        if(!ObjectUtils.isEmpty(req.getName())){
+        if (!ObjectUtils.isEmpty(req.getName())) {
             criteria.andNameLike("%" + req.getName() + "%");
         }
-        PageHelper.startPage(req.getPage(),req.getSize());
+        PageHelper.startPage(req.getPage(), req.getSize());
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
 
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
-        LOG.info("总行数: {}",pageInfo.getTotal());
-        LOG.info("总页数: {}",pageInfo.getPages());
+        LOG.info("总行数: {}", pageInfo.getTotal());
+        LOG.info("总页数: {}", pageInfo.getPages());
 
 
         /** 遍历ebookList,将结果转成List<EbookResp> */
@@ -51,11 +52,23 @@ public class EbookService {
         //}
 
         //列表复制
-        List<EbookResp> list = CopyUtil.copyList(ebookList, EbookResp.class);
-        PageResp<EbookResp> pageResp = new PageResp<>();
+        List<EbookQueryResp> list = CopyUtil.copyList(ebookList, EbookQueryResp.class);
+        PageResp<EbookQueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(list);
 
         return pageResp;
+    }
+
+    /** 保存 */
+    public void save(EbookSaveReq req) {
+        Ebook ebook = CopyUtil.copy(req, Ebook.class);
+        if (ObjectUtils.isEmpty(req.getId())) {
+            /** 新增 */
+            ebookMapper.insert(ebook);
+        } else {
+            /** 更新 */
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
     }
 }
