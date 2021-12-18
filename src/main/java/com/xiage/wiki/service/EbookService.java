@@ -10,6 +10,7 @@ import com.xiage.wiki.req.EbookSaveReq;
 import com.xiage.wiki.resp.EbookQueryResp;
 import com.xiage.wiki.resp.PageResp;
 import com.xiage.wiki.util.CopyUtil;
+import com.xiage.wiki.util.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class EbookService {
 
     @Resource
     private EbookMapper ebookMapper;
+
+    @Resource
+    private SnowFlake snowFlake;
 
     public PageResp<EbookQueryResp> list(EbookQueryReq req) {
         /** 相当于创建where条件 */
@@ -64,7 +68,8 @@ public class EbookService {
     public void save(EbookSaveReq req) {
         Ebook ebook = CopyUtil.copy(req, Ebook.class);
         if (ObjectUtils.isEmpty(req.getId())) {
-            /** 新增 */
+            /** 新增 ,雪花算法生成Id*/
+            ebook.setId(snowFlake.nextId());
             ebookMapper.insert(ebook);
         } else {
             /** 更新 */
