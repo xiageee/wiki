@@ -1,6 +1,9 @@
 package com.xiage.wiki.domain;
 
 public class Ebook {
+
+    //@JSONField(serializeUsing= ToStringSerializer.class)
+    //@JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     private String name;
