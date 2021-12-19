@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 public class EbookQueryResp {
 
-    //@JSONField(serializeUsing= ToStringSerializer.class)
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
