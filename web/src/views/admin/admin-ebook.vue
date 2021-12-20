@@ -32,6 +32,11 @@
                 <template #cover="{ text: cover }">
                     <img v-if="cover" :src="cover" alt="avatar"/>
                 </template>
+                <template v-slot:category="{ text, record }">
+<!--                    {{ 等待优化7-6 }}-->
+<!--                    <span>{{ getCategoryName(record.category1Id) }} / {{ getCategoryName(record.category2Id) }}</span>-->
+                    <span>{{ "等待优化" }} / {{ "7-6" }}</span>
+                </template>
                 <template v-slot:action="{ text, record }">
                     <a-space size="small">
                         <a-button type="primary" @click="edit(record)">
@@ -109,13 +114,8 @@
                     dataIndex: 'name'
                 },
                 {
-                    title: '分类一',
-                    key: 'category1Id',
-                    dataIndex: 'category1Id'
-                },
-                {
-                    title: '分类二',
-                    dataIndex: 'category2Id'
+                    title: '分类',
+                    slots: { customRender: 'category' }
                 },
                 {
                     title: '文档数',
@@ -241,6 +241,7 @@
 
 
             const level1 =  ref();
+            let categorys: any;
             /**
              * 查询所有分类
              **/
@@ -250,7 +251,7 @@
                     loading.value = false;
                     const data = response.data;
                     if (data.success){
-                        const categorys = data.content;
+                        categorys = data.content;
                         console.log("原始数组:",categorys);
 
                         level1.value = [];
@@ -261,6 +262,20 @@
                         message.error(data.message);
                     }
                 });
+            };
+
+            const getCategoryName = (cid: number) => {
+                // console.log(cid)
+                console.log("categorys: "+categorys)
+                let result = "";
+                categorys.forEach((item: any) => {
+                    if (item.id === cid) {
+                        console.log(item)
+                        // return item.name; // 注意，这里直接return不起作用
+                        result = item.name;
+                    }
+                });
+                return result;
             };
 
             onMounted(() => {
@@ -280,6 +295,7 @@
                 loading,
                 handleTableChange,
                 handleQuery,
+                getCategoryName,
 
                 edit,
                 add,
