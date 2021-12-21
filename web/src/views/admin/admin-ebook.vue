@@ -33,9 +33,7 @@
                     <img v-if="cover" :src="cover" alt="avatar"/>
                 </template>
                 <template v-slot:category="{ text, record }">
-<!--                    {{ 等待优化7-6 }}-->
-<!--                    <span>{{ getCategoryName(record.category1Id) }} / {{ getCategoryName(record.category2Id) }}</span>-->
-                    <span>{{ "等待优化" }} / {{ "7-6" }}</span>
+                    <span>{{ getCategoryName(record.category1Id) }} / {{ getCategoryName(record.category2Id) }}</span>
                 </template>
                 <template v-slot:action="{ text, record }">
                     <a-space size="small">
@@ -268,11 +266,11 @@
 
             const getCategoryName = (cid: number) => {
                 // console.log(cid)
-                console.log("categorys: "+categorys)
                 let result = "";
                 categorys.forEach((item: any) => {
-                    if (item.id === cid) {
-                        console.log(item)
+                    // console.log(typeof item.id)  string类型(由于返回参数封装类中的id字段转成string注解)
+                    // console.log(typeof cid,cid,item.name)  number类型
+                    if (item.id == cid) {
                         // return item.name; // 注意，这里直接return不起作用
                         result = item.name;
                     }
